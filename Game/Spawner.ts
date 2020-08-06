@@ -1,14 +1,14 @@
 namespace Game {
     import ƒ = FudgeCore;
 
-    export class Spawner extends Actor {
+    export class Spawner extends Enemy {
 
         private spawnType: ENEMIES;
         private spawnRate: number;
         private timeSinceSpawn: number;
 
         constructor(_name: string = "Spawner") {
-            super(_name, config.Spawner.speed, config.Spawner.health);
+            super(_name, config.Spawner.speed, config.Spawner.health, 2, config.Spawner.value);
             this.spawnType = config.Spawner.spawnType;
             this.spawnRate = config.Spawner.spawnRate;
             this. timeSinceSpawn = 0;
@@ -32,7 +32,7 @@ namespace Game {
 
             //TODO: MAKE SPAWNERS MOVE
 
-            return true;
+            return super.update();
         }
 
         protected createModel(): void {

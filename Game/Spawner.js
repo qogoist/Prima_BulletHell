@@ -2,9 +2,9 @@
 var Game;
 (function (Game) {
     var ƒ = FudgeCore;
-    class Spawner extends Game.Actor {
+    class Spawner extends Game.Enemy {
         constructor(_name = "Spawner") {
-            super(_name, Game.config.Spawner.speed, Game.config.Spawner.health);
+            super(_name, Game.config.Spawner.speed, Game.config.Spawner.health, 2, Game.config.Spawner.value);
             this.spawnType = Game.config.Spawner.spawnType;
             this.spawnRate = Game.config.Spawner.spawnRate;
             this.timeSinceSpawn = 0;
@@ -22,7 +22,7 @@ var Game;
                 this.timeSinceSpawn = 0;
             }
             //TODO: MAKE SPAWNERS MOVE
-            return true;
+            return super.update();
         }
         createModel() {
             let model = new ƒ.Node("Spawner");

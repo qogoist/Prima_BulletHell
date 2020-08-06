@@ -2,27 +2,27 @@ namespace Game {
     import ƒ = FudgeCore;
 
     window.addEventListener("load", hndLoad);
+    window.addEventListener("resize", hndResize);
 
     export let graph: ƒ.Node;
     export let player: Player;
     export let map: ƒ.Node;
     export let projectileList: Projectile[] = [];
-    export let enemyList: Actor[] = [];
-
+    export let enemyList: Enemy[] = [];
+    export let score: number;
     export let config: Config;
+    export let color: number;
 
     export let viewport: ƒ.Viewport;
 
-    async function hndLoad(_event: Event): Promise<void> {
+    function init(): void {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        ƒ.Debug.log(canvas);
-
-        config = await loadJSON();
 
         graph = new ƒ.Node("Graph");
         player = new Player();
+        score = 0;
 
         generateMap();
         createLights();
@@ -49,24 +49,28 @@ namespace Game {
         viewport.addEventListener(ƒ.EVENT_POINTER.UP, hndMouseUp);
 
         viewport.activateKeyboardEvent(ƒ.EVENT_KEYBOARD.DOWN, true);
+        viewport.addEventListener(ƒ.EVENT_KEYBOARD.DOWN, hndKey);
         viewport.setFocus(true);
 
-        ƒ.Time.game.setScale(1);
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+        ƒ.Time.game.setScale(1);
     }
 
     function update(_event: ƒ.Eventƒ): void {
         processInput();
-        player.update();
-        
+        if (!player.update())
+            gameOver();
+
         for (let enemy of enemyList) {
             if (!enemy.update()) {
                 graph.removeChild(enemy);
                 enemyList.splice(enemyList.indexOf(enemy), 1);
+
+                score += enemy.value;
             }
         }
-        
+
         for (let projectile of projectileList) {
             if (!projectile.update()) {
                 graph.removeChild(projectile);
@@ -74,14 +78,28 @@ namespace Game {
             }
         }
 
+        updateScore();
         viewport.draw();
+    }
+
+    function hndKey(_event: ƒ.EventKeyboard): void {
+        switch (_event.code) {
+            case ƒ.KEYBOARD_CODE.ESC:
+                if (ƒ.Time.game.getScale() == 1)
+                    getPauseMenu();
+                else
+                    hidePauseMenu();
+                break;
+            default:
+                break;
+        }
     }
 
     function processInput(): void {
         let direction: ƒ.Vector3 = ƒ.Vector3.ZERO();
 
         let difference: ƒ.Vector3 = ƒ.Vector3.DIFFERENCE(player.mtxLocal.translation, viewport.camera.pivot.translation);
-        let relDirection: ƒ.Vector3 = ƒ.Vector3.NORMALIZATION(new ƒ.Vector3(difference.x, 0, difference.z), 1);
+        let relDirection: ƒ.Vector3 = new ƒ.Vector3(difference.x, 0, difference.z);
 
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.W]))
             direction.add(relDirection);
@@ -92,7 +110,7 @@ namespace Game {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.D]))
             direction.add(ƒ.Vector3.TRANSFORMATION(relDirection, ƒ.Matrix4x4.ROTATION_Y(-90)));
 
-        player.move(direction);
+        player.setDirection(direction);
     }
 
     function hndMouseMove(_event: ƒ.EventPointer): void {
@@ -135,5 +153,65 @@ namespace Game {
 
         graph.addComponent(cmpLightAmbient);
         graph.addComponent(cmpLightDirection);
+    }
+
+    function updateScore(): void {
+        let elem: HTMLElement = document.querySelector("h1#score");
+        elem.innerHTML = "Score: " + score;
+    }
+
+    function getPauseMenu(): void {
+        ƒ.Time.game.setScale(0);
+
+        document.getElementById("Pause").style.left = "50%";
+        document.querySelector("#Resume").addEventListener("click", hidePauseMenu);
+        document.querySelector("#Back").addEventListener("click", goToMainMenu);
+    }
+
+    function hidePauseMenu(): void {
+        ƒ.Time.game.setScale(1);
+
+        document.getElementById("Pause").style.left = "-50%";
+    }
+
+    function goToMainMenu(): void {
+        ƒ.Debug.log("Ending the Game");
+        ƒ.Loop.stop();
+        location.reload();
+    }
+
+    function startGame(): void {
+        document.getElementById("Main").style.left = "-100%";
+        init();
+    }
+
+    function changeColor(): void {
+        color++;
+        if (color >= config.Colors.length)
+            color = 0;
+
+        document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
+    }
+
+    async function hndLoad(): Promise<void> {
+        config = await loadJSON();
+        color = 0;
+        document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
+
+        document.querySelector("#Start").addEventListener("click", startGame);
+        document.querySelector("#Color").addEventListener("click", changeColor);
+    }
+
+    function gameOver(): void {
+        viewport.removeEventListener(ƒ.EVENT_KEYBOARD.DOWN, hndKey);
+        ƒ.Time.game.setScale(0);
+        document.getElementById("Over").style.left = "50%";
+        document.querySelector("#Again").addEventListener("click", goToMainMenu);
+    }
+
+    function hndResize(_event: Event): void {
+        const canvas: HTMLCanvasElement = document.querySelector("canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
 }

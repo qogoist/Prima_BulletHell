@@ -1,9 +1,14 @@
 {
+    "Colors": [
+        "red",
+        "blue",
+        "green"
+    ],
     "Player": {
         "speed": 2,
         "health": 10,
         "projectile": "STANDARD",
-        "firingRate": 2
+        "firingRate": 5
     },
     "StandardProjectile": {
         "speed": 10,
@@ -13,12 +18,14 @@
     "SmallEnemy": {
         "speed": 4,
         "health": 2,
-        "damage": 1
+        "damage": 1,
+        "value": 1
     },
     "Spawner": {
         "speed": 0.5,
         "health": 100,
         "spawnType": "SMALL",
-        "spawnRate": 5
+        "spawnRate": 10000,
+        "value": 20
     }
 }

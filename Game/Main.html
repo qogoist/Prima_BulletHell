@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>X0X0</title>
+    <link rel="stylesheet" href="style.css">
     <script src="FudgeCore/FudgeCore.js"></script>
+    <script src="ColorUtil.js"></script>
     <script src="Main.js"></script>
     <script src="Config.js"></script>
     <script src="Actor.js"></script>
+    <script src="Enemy.js"></script>
     <script src="Player.js"></script>
     <script src="Spawner.js"></script>
     <script src="SmallEnemy.js"></script>
@@ -16,25 +20,37 @@
     <script src="StandardProjectile.js"></script>
     <script src="ProjectileFactory.js"></script>
     <script src="EnemyFactory.js"></script>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-        }
-
-        canvas {
-            display: block;
-        }
-    </style>
 </head>
+
 <body>
+    <h1 id="score">Score: 0</h1>
     <canvas></canvas>
+    <div id="Main">
+        <div class="innerMain">
+            <h1>WHADDUP</h1>
+            <p id="Start">START GAME</p>
+            <p id="Color">COLOR: RED</p>
+            <div class="slidecontainer">
+                <label for="Volume">VOLUME:</label>
+                <input type="range" min="1" max="100" value="50" class="slider" id="Volume">
+            </div>
+        </div>
+    </div>
+
+    <div class="menu" id="Pause">
+        <div class="innerMenu">
+            <h1>PAUSED</h1>
+            <p id="Resume">RESUME GAME</p>
+            <p id="Back">BACK TO MAIN MENU</p>
+        </div>
+    </div>
+
+    <div class="menu" id="Over">
+        <div class="innerMenu">
+            <h1>GAME OVER</h1>
+            <p id="Again">MAIN MENU</p>
+        </div>
+    </div>
 </body>
+
 </html>

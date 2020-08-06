@@ -1,6 +1,7 @@
 namespace Game {
 
     export interface Config {
+        Colors: string[];
         Player: Player;
         StandardProjectile: StandardProjectile;
         Spawner: Spawner;

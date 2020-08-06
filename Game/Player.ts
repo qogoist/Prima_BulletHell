@@ -11,7 +11,7 @@ namespace Game {
         constructor(_name: string = "Player") {
             ƒ.Debug.log("Creating new Player...");
 
-            super(_name, config.Player.speed, config.Player.health);
+            super(_name, config.Player.speed, config.Player.health, 0.5);
             this.projectile = config.Player.projectile;
             this.isShooting = false;
             this.firingRate = config.Player.firingRate;
@@ -22,16 +22,6 @@ namespace Game {
             this.mtxLocal.translateY(0.5);
         }
 
-        public move(_direction: ƒ.Vector3): void {
-            let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
-            let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(_direction, timeFrame * this.speed);
-
-            this.mtxLocal.translate(distance);
-
-            let model: ƒ.Node = this.getChild(0);
-            model.mtxLocal.lookAt(this.facing);
-        }
-
         public setFacing(_vec: ƒ.Vector3): void {
             this.facing = _vec;
         }
@@ -39,6 +29,7 @@ namespace Game {
         public update(): boolean {
             let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
             this.updateOrientation();
+            this.move();
 
             if (this.isShooting && this.timeLastShot >= (1 / this.firingRate)) {
                 this.shoot();
@@ -46,7 +37,7 @@ namespace Game {
             }
 
             this.timeLastShot += timeFrame;
-            return true;
+            return super.update();
         }
 
         public setIsShooting(_state: boolean): void {
@@ -59,7 +50,7 @@ namespace Game {
             let cmpMeshSphere: ƒ.ComponentMesh = new ƒ.ComponentMesh(meshSphere);
             sphere.addComponent(cmpMeshSphere);
 
-            let material: ƒ.Material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material: ƒ.Material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color])));
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             sphere.addComponent(cmpMaterial);
 
@@ -99,7 +90,7 @@ namespace Game {
         }
 
         private shoot(): void {
-            ƒ.Debug.log("Firing at: " + this.facing);
+            // ƒ.Debug.log("Firing at: " + this.facing);
             ProjectileFactory.createProjectile(this.projectile, this.calculateOrientation());
         }
     }

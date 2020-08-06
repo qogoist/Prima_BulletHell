@@ -7,18 +7,18 @@ namespace Game {
         protected damage: number;               //
         protected lifespan: number;             // in seconds
 
-        constructor(_name: string, _speed: number, _direction: ƒ.Vector3, _damage: number, _lifespan: number) {
+        constructor(_name: string, _speed: number, _direction: ƒ.Vector3, _damage: number, _lifespan: number, _playerOwned: boolean = true) {
             super(_name);
             this.speed = _speed;
             this.direction = _direction;
             this.damage = _damage;              
             this.lifespan = _lifespan;         
 
-            this.createModel();
+            this.createModel(_playerOwned);
         }
 
         public abstract update(): boolean;
 
-        protected abstract createModel(): void;
+        protected abstract createModel(_playerOwned: boolean): void;
     }
 }

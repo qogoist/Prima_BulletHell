@@ -3,10 +3,9 @@ var Game;
 (function (Game) {
     var ƒ = FudgeCore;
     class StandardProjectile extends Game.Projectile {
-        constructor(_name, _direction) {
-            super(_name, Game.config.StandardProjectile.speed, _direction, Game.config.StandardProjectile.damage, Game.config.StandardProjectile.lifespan);
+        constructor(_name, _direction, _playerOwned = true) {
+            super(_name, Game.config.StandardProjectile.speed, _direction, Game.config.StandardProjectile.damage, Game.config.StandardProjectile.lifespan, _playerOwned);
             this.radius = 0.15;
-            this.createModel();
             this.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY()));
             this.cmpTransform.local = Game.player.cmpTransform.local.copy;
         }
@@ -35,14 +34,18 @@ var Game;
                 result = true;
             return result;
         }
-        createModel() {
+        createModel(_playerOwned) {
             let model = new ƒ.Node("Model");
-            let mesh = new ƒ.MeshSphere(6, 10);
+            let mesh = new ƒ.MeshSphere(8, 8);
             let cmpMesh = new ƒ.ComponentMesh(mesh);
             model.addComponent(cmpMesh);
-            cmpMesh.pivot.scale(new ƒ.Vector3(0.1, 0.1, 0.3));
+            cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.3));
             cmpMesh.pivot.rotateX(90);
-            let material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material;
+            if (_playerOwned)
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Colors[Game.color])));
+            else
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored());
             let cmpMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());

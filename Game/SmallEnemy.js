@@ -2,20 +2,23 @@
 var Game;
 (function (Game) {
     var ƒ = FudgeCore;
-    class SmallEnemy extends Game.Actor {
+    class SmallEnemy extends Game.Enemy {
         constructor(_name = "SmallEnemy") {
-            super(_name, Game.config.SmallEnemy.speed, Game.config.SmallEnemy.health);
+            super(_name, Game.config.SmallEnemy.speed, Game.config.SmallEnemy.health, 0.5, Game.config.SmallEnemy.value);
             this.damage = Game.config.SmallEnemy.damage;
-            this.radius = 0.5;
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);
             this.mtxLocal.translateY(0.5);
         }
         update() {
+            if (this.collidesWith(Game.player)) {
+                Game.player.reduceHP(this.damage);
+                this.setDirection(ƒ.Vector3.SCALE(this.direction, -1));
+            }
+            else
+                this.setDirection(ƒ.Vector3.DIFFERENCE(Game.player.mtxLocal.translation, this.mtxLocal.translation));
             this.move();
-            if (this.health <= 0)
-                return false;
-            return true;
+            return super.update();
         }
         createModel() {
             let sphere = new ƒ.Node("SmallEnemy");
@@ -31,9 +34,7 @@ var Game;
         }
         move() {
             let timeFrame = ƒ.Loop.timeFrameGame / 1000;
-            let direction = ƒ.Vector3.DIFFERENCE(Game.player.mtxLocal.translation, this.mtxLocal.translation);
-            direction.normalize(1);
-            let distance = ƒ.Vector3.SCALE(direction, timeFrame * this.speed);
+            let distance = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
             this.mtxLocal.translate(distance);
         }
     }

@@ -5,7 +5,7 @@ var Game;
     class Player extends Game.Actor {
         constructor(_name = "Player") {
             ƒ.Debug.log("Creating new Player...");
-            super(_name, Game.config.Player.speed, Game.config.Player.health);
+            super(_name, Game.config.Player.speed, Game.config.Player.health, 0.5);
             this.projectile = Game.config.Player.projectile;
             this.isShooting = false;
             this.firingRate = Game.config.Player.firingRate;
@@ -14,25 +14,19 @@ var Game;
             this.addComponent(cmpTransform);
             this.mtxLocal.translateY(0.5);
         }
-        move(_direction) {
-            let timeFrame = ƒ.Loop.timeFrameGame / 1000;
-            let distance = ƒ.Vector3.SCALE(_direction, timeFrame * this.speed);
-            this.mtxLocal.translate(distance);
-            let model = this.getChild(0);
-            model.mtxLocal.lookAt(this.facing);
-        }
         setFacing(_vec) {
             this.facing = _vec;
         }
         update() {
             let timeFrame = ƒ.Loop.timeFrameGame / 1000;
             this.updateOrientation();
+            this.move();
             if (this.isShooting && this.timeLastShot >= (1 / this.firingRate)) {
                 this.shoot();
                 this.timeLastShot = 0;
             }
             this.timeLastShot += timeFrame;
-            return true;
+            return super.update();
         }
         setIsShooting(_state) {
             this.isShooting = _state;
@@ -42,7 +36,7 @@ var Game;
             let meshSphere = new ƒ.MeshSphere(10, 10);
             let cmpMeshSphere = new ƒ.ComponentMesh(meshSphere);
             sphere.addComponent(cmpMeshSphere);
-            let material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Colors[Game.color])));
             let cmpMaterial = new ƒ.ComponentMaterial(material);
             sphere.addComponent(cmpMaterial);
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
@@ -71,7 +65,7 @@ var Game;
             model.mtxLocal.lookAt(this.calculateOrientation());
         }
         shoot() {
-            ƒ.Debug.log("Firing at: " + this.facing);
+            // ƒ.Debug.log("Firing at: " + this.facing);
             Game.ProjectileFactory.createProjectile(this.projectile, this.calculateOrientation());
         }
     }

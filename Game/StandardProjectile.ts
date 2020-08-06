@@ -5,10 +5,10 @@ namespace Game {
 
         public radius: number;
 
-        constructor(_name: string, _direction: ƒ. Vector3) {
-            super(_name, config.StandardProjectile.speed, _direction, config.StandardProjectile.damage, config.StandardProjectile.lifespan);
+        constructor(_name: string, _direction: ƒ.Vector3, _playerOwned: boolean = true) {
+            super(_name, config.StandardProjectile.speed, _direction, config.StandardProjectile.damage, config.StandardProjectile.lifespan, _playerOwned);
             this.radius = 0.15;
-            this.createModel();
+
             this.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY()));
             this.cmpTransform.local = player.cmpTransform.local.copy;
         }
@@ -17,7 +17,7 @@ namespace Game {
             // ƒ.Debug.log("Moving Projectile " + this.name + " towards " + (this.direction));
             // ƒ.Debug.log("Time to live: " + this.lifespan);
             let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
-            
+
             let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
             this.mtxLocal.translate(distance);
 
@@ -46,16 +46,21 @@ namespace Game {
             return result;
         }
 
-        protected createModel(): void {
+        protected createModel(_playerOwned: boolean): void {
             let model: ƒ.Node = new ƒ.Node("Model");
 
-            let mesh: ƒ.MeshSphere = new ƒ.MeshSphere(6, 10);
+            let mesh: ƒ.MeshSphere = new ƒ.MeshSphere(8, 8);
             let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(mesh);
             model.addComponent(cmpMesh);
-            cmpMesh.pivot.scale(new ƒ.Vector3(0.1, 0.1, 0.3));
+            cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.3));
             cmpMesh.pivot.rotateX(90);
 
-            let material: ƒ.Material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material: ƒ.Material;
+            if (_playerOwned)
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color])));
+            else
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored());
+                
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
 
