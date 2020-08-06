@@ -1,0 +1,24 @@
+{
+    "Player": {
+        "speed": 2,
+        "health": 10,
+        "projectile": "STANDARD",
+        "firingRate": 2
+    },
+    "StandardProjectile": {
+        "speed": 10,
+        "damage": 1,
+        "lifespan": 5
+    },
+    "SmallEnemy": {
+        "speed": 4,
+        "health": 2,
+        "damage": 1
+    },
+    "Spawner": {
+        "speed": 0.5,
+        "health": 100,
+        "spawnType": "SMALL",
+        "spawnRate": 5
+    }
+}
