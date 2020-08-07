@@ -6,7 +6,7 @@ namespace Game {
         public radius: number;
 
         constructor(_name: string, _direction: ƒ.Vector3, _playerOwned: boolean = true) {
-            super(_name, config.StandardProjectile.speed, _direction, config.StandardProjectile.damage, config.StandardProjectile.lifespan, _playerOwned);
+            super(_name, config.standardProjectile.speed, _direction, config.standardProjectile.damage, config.standardProjectile.lifespan, _playerOwned);
             this.radius = 0.15;
 
             this.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY()));
@@ -62,9 +62,9 @@ namespace Game {
 
             let material: ƒ.Material;
             if (_playerOwned)
-                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color])));
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.colors[color])));
             else
-                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color + 1])));
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.colors[color + 1])));
 
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);

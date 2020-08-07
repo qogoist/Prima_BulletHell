@@ -47,7 +47,7 @@ namespace Game {
         map.addChild(enemyList);
         map.addChild(player);
 
-        cameraPos = new ƒ.Vector3(config.Map.camera[0], config.Map.camera[1], config.Map.camera[2]);
+        cameraPos = new ƒ.Vector3(config.map.camera[0], config.map.camera[1], config.map.camera[2]);
 
         let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
         cmpCamera.pivot.translate(cameraPos);
@@ -166,14 +166,14 @@ namespace Game {
     function generateMap(): ƒ.Node {
         let map: ƒ.Node = new ƒ.Node("Map");
 
-        let material: ƒ.Material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Map.color)));
+        let material: ƒ.Material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.map.color)));
         let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
         map.addComponent(cmpMaterial);
 
         let mesh: ƒ.MeshQuad = new ƒ.MeshQuad();
         let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(mesh);
         map.addComponent(cmpMesh);
-        cmpMesh.pivot.scale(ƒ.Vector3.ONE(config.Map.size));
+        cmpMesh.pivot.scale(ƒ.Vector3.ONE(config.map.size));
         cmpMesh.pivot.rotateX(-90);
 
         return map;
@@ -192,7 +192,7 @@ namespace Game {
     function hndSpawnerSpawn(): void {
         console.log(spawnTimer.lapse);
         let rnd: ƒ.Random = new ƒ.Random();
-        let bound: number = config.Map.size / 2;
+        let bound: number = config.map.size / 2;
 
         let x: number = rnd.getRangeFloored(-bound, bound);
         let z: number = rnd.getRangeFloored(-bound, bound);
@@ -201,10 +201,10 @@ namespace Game {
 
         EnemyFactory.createEnemy(ENEMIES.SPAWNER, pos);
 
-        let nextTime: number = (spawnTimer.lapse / 1000) - config.Map.spawnRateReduction;
+        let nextTime: number = (spawnTimer.lapse / 1000) - config.map.spawnRateReduction;
 
         if (nextTime <= 0)
-            nextTime = config.Map.spawnRate;
+            nextTime = config.map.spawnRate;
 
         spawnTimer.clear();
         spawnTimer = new ƒ.Timer(ƒ.Time.game, nextTime * 1000, 0, hndSpawnerSpawn);
@@ -260,10 +260,10 @@ namespace Game {
 
     function changeColor(): void {
         color++;
-        if (color >= config.Colors.length)
+        if (color >= config.colors.length)
             color = 0;
 
-        document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
+        document.querySelector("#Color").innerHTML = "COLOR: " + config.colors[color].toUpperCase();
     }
 
     async function hndLoad(): Promise<void> {
@@ -274,7 +274,7 @@ namespace Game {
         audioImpact = await ƒ.Audio.load("Assets/impact.mp3");
         audioBackground = await ƒ.Audio.load("Assets/background_music.mp3");
 
-        document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
+        document.querySelector("#Color").innerHTML = "COLOR: " + config.colors[color].toUpperCase();
 
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);

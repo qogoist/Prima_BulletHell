@@ -4,9 +4,9 @@ var Game;
     var ƒ = FudgeCore;
     class Spawner extends Game.Enemy {
         constructor(_name = "Spawner") {
-            super(_name, Game.config.Spawner.speed, Game.config.Spawner.health, 2, Game.config.Spawner.value);
-            this.spawnType = Game.config.Spawner.spawnType;
-            this.spawnRate = Game.config.Spawner.spawnRate;
+            super(_name, Game.config.spawner.speed, Game.config.spawner.health, 2, Game.config.spawner.value);
+            this.spawnType = Game.config.spawner.spawnType;
+            this.spawnRate = Game.config.spawner.spawnRate;
             this.timeSinceSpawn = 0;
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);

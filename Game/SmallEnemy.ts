@@ -6,8 +6,8 @@ namespace Game {
         public damage: number;
 
         constructor(_name: string = "SmallEnemy") {
-            super(_name, config.SmallEnemy.speed, config.SmallEnemy.health, 0.5, config.SmallEnemy.value);
-            this.damage = config.SmallEnemy.damage;
+            super(_name, config.smallEnemy.speed, config.smallEnemy.health, 0.5, config.smallEnemy.value);
+            this.damage = config.smallEnemy.damage;
 
             let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);

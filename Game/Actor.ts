@@ -63,7 +63,7 @@ namespace Game {
             let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
             let nextPos: ƒ.Vector3 = ƒ.Vector3.SUM(this.mtxLocal.translation, distance);
 
-            let boundary: number = config.Map.size / 2 - this.radius;
+            let boundary: number = config.map.size / 2 - this.radius;
 
             if (nextPos.x >= boundary || nextPos.x <= -boundary)
                 distance.x = 0;

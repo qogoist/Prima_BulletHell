@@ -4,8 +4,8 @@ var Game;
     var ƒ = FudgeCore;
     class SmallEnemy extends Game.Enemy {
         constructor(_name = "SmallEnemy") {
-            super(_name, Game.config.SmallEnemy.speed, Game.config.SmallEnemy.health, 0.5, Game.config.SmallEnemy.value);
-            this.damage = Game.config.SmallEnemy.damage;
+            super(_name, Game.config.smallEnemy.speed, Game.config.smallEnemy.health, 0.5, Game.config.smallEnemy.value);
+            this.damage = Game.config.smallEnemy.damage;
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);
             this.mtxLocal.translateY(0.5);

@@ -11,10 +11,10 @@ namespace Game {
         constructor(_name: string = "Player") {
             ƒ.Debug.log("Creating new Player...");
 
-            super(_name, config.Player.speed, config.Player.health, 0.5, ƒ.Color.CSS(config.Colors[color]));
-            this.projectile = config.Player.projectile;
+            super(_name, config.player.speed, config.player.health, 0.5, ƒ.Color.CSS(config.colors[color]));
+            this.projectile = config.player.projectile;
             this.isShooting = false;
-            this.firingRate = config.Player.firingRate;
+            this.firingRate = config.player.firingRate;
             this.timeLastShot = this.firingRate;
 
             let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
@@ -54,7 +54,7 @@ namespace Game {
         public reduceHP(_x: number): void {
             super.reduceHP(_x);
 
-            ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(config.Colors[color + 1]));
+            ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(config.colors[color + 1]));
             
             let elem: HTMLElement = document.querySelector("h1#health");
             elem.innerHTML = "HP: " + this.health + "/" + this.maxHealth;

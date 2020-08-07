@@ -1,12 +1,12 @@
 namespace Game {
 
     export interface Config {
-        Map: Map;
-        Colors: string[];
-        Player: Player;
-        StandardProjectile: StandardProjectile;
-        Spawner: Spawner;
-        SmallEnemy: SmallEnemy;
+        map: Map;
+        colors: string[];
+        player: Player;
+        standardProjectile: StandardProjectile;
+        spawner: Spawner;
+        smallEnemy: SmallEnemy;
     }
 
     export interface Map {

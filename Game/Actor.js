@@ -41,7 +41,7 @@ var Game;
             let timeFrame = ƒ.Loop.timeFrameGame / 1000;
             let distance = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
             let nextPos = ƒ.Vector3.SUM(this.mtxLocal.translation, distance);
-            let boundary = Game.config.Map.size / 2 - this.radius;
+            let boundary = Game.config.map.size / 2 - this.radius;
             if (nextPos.x >= boundary || nextPos.x <= -boundary)
                 distance.x = 0;
             if (nextPos.z >= boundary || nextPos.z <= -boundary)

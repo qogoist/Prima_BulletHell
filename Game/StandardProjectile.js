@@ -4,7 +4,7 @@ var Game;
     var ƒ = FudgeCore;
     class StandardProjectile extends Game.Projectile {
         constructor(_name, _direction, _playerOwned = true) {
-            super(_name, Game.config.StandardProjectile.speed, _direction, Game.config.StandardProjectile.damage, Game.config.StandardProjectile.lifespan, _playerOwned);
+            super(_name, Game.config.standardProjectile.speed, _direction, Game.config.standardProjectile.damage, Game.config.standardProjectile.lifespan, _playerOwned);
             this.radius = 0.15;
             this.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY()));
             this.cmpTransform.local = Game.player.cmpTransform.local.copy;
@@ -44,9 +44,9 @@ var Game;
             cmpMesh.pivot.rotateX(90);
             let material;
             if (_playerOwned)
-                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Colors[Game.color])));
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.colors[Game.color])));
             else
-                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Colors[Game.color + 1])));
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.colors[Game.color + 1])));
             let cmpMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());

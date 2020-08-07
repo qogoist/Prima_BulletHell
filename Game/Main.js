@@ -25,7 +25,7 @@ var Game;
         Game.graph.addChild(Game.projectileList);
         Game.map.addChild(Game.enemyList);
         Game.map.addChild(Game.player);
-        cameraPos = new ƒ.Vector3(Game.config.Map.camera[0], Game.config.Map.camera[1], Game.config.Map.camera[2]);
+        cameraPos = new ƒ.Vector3(Game.config.map.camera[0], Game.config.map.camera[1], Game.config.map.camera[2]);
         let cmpCamera = new ƒ.ComponentCamera();
         cmpCamera.pivot.translate(cameraPos);
         cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
@@ -118,13 +118,13 @@ var Game;
     }
     function generateMap() {
         let map = new ƒ.Node("Map");
-        let material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Map.color)));
+        let material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.map.color)));
         let cmpMaterial = new ƒ.ComponentMaterial(material);
         map.addComponent(cmpMaterial);
         let mesh = new ƒ.MeshQuad();
         let cmpMesh = new ƒ.ComponentMesh(mesh);
         map.addComponent(cmpMesh);
-        cmpMesh.pivot.scale(ƒ.Vector3.ONE(Game.config.Map.size));
+        cmpMesh.pivot.scale(ƒ.Vector3.ONE(Game.config.map.size));
         cmpMesh.pivot.rotateX(-90);
         return map;
     }
@@ -138,14 +138,14 @@ var Game;
     function hndSpawnerSpawn() {
         console.log(spawnTimer.lapse);
         let rnd = new ƒ.Random();
-        let bound = Game.config.Map.size / 2;
+        let bound = Game.config.map.size / 2;
         let x = rnd.getRangeFloored(-bound, bound);
         let z = rnd.getRangeFloored(-bound, bound);
         let pos = new ƒ.Vector3(x, 0, z);
         Game.EnemyFactory.createEnemy(Game.ENEMIES.SPAWNER, pos);
-        let nextTime = (spawnTimer.lapse / 1000) - Game.config.Map.spawnRateReduction;
+        let nextTime = (spawnTimer.lapse / 1000) - Game.config.map.spawnRateReduction;
         if (nextTime <= 0)
-            nextTime = Game.config.Map.spawnRate;
+            nextTime = Game.config.map.spawnRate;
         spawnTimer.clear();
         spawnTimer = new ƒ.Timer(ƒ.Time.game, nextTime * 1000, 0, hndSpawnerSpawn);
     }
@@ -188,9 +188,9 @@ var Game;
     }
     function changeColor() {
         Game.color++;
-        if (Game.color >= Game.config.Colors.length)
+        if (Game.color >= Game.config.colors.length)
             Game.color = 0;
-        document.querySelector("#Color").innerHTML = "COLOR: " + Game.config.Colors[Game.color].toUpperCase();
+        document.querySelector("#Color").innerHTML = "COLOR: " + Game.config.colors[Game.color].toUpperCase();
     }
     async function hndLoad() {
         Game.config = await Game.loadJSON();
@@ -198,7 +198,7 @@ var Game;
         Game.audioShot = await ƒ.Audio.load("Assets/shot.mp3");
         Game.audioImpact = await ƒ.Audio.load("Assets/impact.mp3");
         Game.audioBackground = await ƒ.Audio.load("Assets/background_music.mp3");
-        document.querySelector("#Color").innerHTML = "COLOR: " + Game.config.Colors[Game.color].toUpperCase();
+        document.querySelector("#Color").innerHTML = "COLOR: " + Game.config.colors[Game.color].toUpperCase();
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);
         document.querySelector("#MasterVolume").addEventListener("input", changeMasterVolume);

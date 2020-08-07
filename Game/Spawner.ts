@@ -8,9 +8,9 @@ namespace Game {
         private timeSinceSpawn: number;
 
         constructor(_name: string = "Spawner") {
-            super(_name, config.Spawner.speed, config.Spawner.health, 2, config.Spawner.value);
-            this.spawnType = config.Spawner.spawnType;
-            this.spawnRate = config.Spawner.spawnRate;
+            super(_name, config.spawner.speed, config.spawner.health, 2, config.spawner.value);
+            this.spawnType = config.spawner.spawnType;
+            this.spawnRate = config.spawner.spawnRate;
             this. timeSinceSpawn = 0;
 
             let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());

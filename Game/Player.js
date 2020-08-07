@@ -5,10 +5,10 @@ var Game;
     class Player extends Game.Actor {
         constructor(_name = "Player") {
             ƒ.Debug.log("Creating new Player...");
-            super(_name, Game.config.Player.speed, Game.config.Player.health, 0.5, ƒ.Color.CSS(Game.config.Colors[Game.color]));
-            this.projectile = Game.config.Player.projectile;
+            super(_name, Game.config.player.speed, Game.config.player.health, 0.5, ƒ.Color.CSS(Game.config.colors[Game.color]));
+            this.projectile = Game.config.player.projectile;
             this.isShooting = false;
-            this.firingRate = Game.config.Player.firingRate;
+            this.firingRate = Game.config.player.firingRate;
             this.timeLastShot = this.firingRate;
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);
@@ -38,7 +38,7 @@ var Game;
         }
         reduceHP(_x) {
             super.reduceHP(_x);
-            Game.ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(Game.config.Colors[Game.color + 1]));
+            Game.ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(Game.config.colors[Game.color + 1]));
             let elem = document.querySelector("h1#health");
             elem.innerHTML = "HP: " + this.health + "/" + this.maxHealth;
         }
