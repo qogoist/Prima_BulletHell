@@ -2,7 +2,7 @@
 Ein Bullet-Hell-artiges spiel in FUDGE - Abgabe von Jonas Haller im Kurs "Prototyping interaktiver Medienanwendungen" im Sommersemester 2020.
 
 * [Spiele For Whome the Paint Tolls](Game/Main.html)
-* [Quellcode](Game/)
+* [Quellcode](https://github.com/qogoist/Prima_BulletHell/tree/master/Game)
 * [Designdokument](designdokument.pdf)
 * [Gepacktes Archiv](archive.zip)
 
@@ -28,8 +28,6 @@ Ein Bullet-Hell-artiges spiel in FUDGE - Abgabe von Jonas Haller im Kurs "Protot
 | 11 | Event-System          | Die Nutzereingaben im Spiel, sowie in den Menüs werden mittels des Eventsystems entgegen genommen und an die entsprechenden Funktionen weitergegeben. |
 
 ## Abgabeformat
-* Fasse die Konzeption als ein wohlformatiertes Designdokument in PDF zusammen!
-* Platziere ebenso Links zu den Stellen in deinem Repository, an denen der Quellcode und das Designdokument zu finden sind.
 * Stelle zudem auf diese Art dort auch ein gepacktes Archiv zur Verfügung, welches folgende Daten enthält
   * Das Designdokument 
   * Die Projektordner inklusive aller erforderlichen Dateien, also auch Bild- und Audiodaten
