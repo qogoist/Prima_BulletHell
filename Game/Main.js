@@ -4,8 +4,6 @@ var Game;
     var ƒ = FudgeCore;
     window.addEventListener("load", hndLoad);
     window.addEventListener("resize", hndResize);
-    Game.projectileList = [];
-    Game.enemyList = [];
     let cameraPos;
     let spawnTimer;
     let cmpAudioBackground;
@@ -17,11 +15,16 @@ var Game;
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         Game.graph = new ƒ.Node("Graph");
+        Game.map = generateMap();
         Game.player = new Game.Player();
+        Game.projectileList = new ƒ.Node("ProjectileList");
+        Game.enemyList = new ƒ.Node("EnemyList");
         Game.score = 0;
-        generateMap();
         createLights();
-        Game.graph.addChild(Game.player);
+        Game.graph.addChild(Game.map);
+        Game.graph.addChild(Game.projectileList);
+        Game.graph.addChild(Game.enemyList);
+        Game.map.addChild(Game.player);
         cameraPos = new ƒ.Vector3(Game.config.Map.camera[0], Game.config.Map.camera[1], Game.config.Map.camera[2]);
         let cmpCamera = new ƒ.ComponentCamera();
         cmpCamera.pivot.translate(cameraPos);
@@ -54,17 +57,17 @@ var Game;
         processInput();
         if (!Game.player.update())
             gameOver();
-        for (let enemy of Game.enemyList) {
-            if (!enemy.update()) {
-                Game.graph.removeChild(enemy);
-                Game.enemyList.splice(Game.enemyList.indexOf(enemy), 1);
-                Game.score += enemy.value;
+        for (let enemy of Game.enemyList.getChildren()) {
+            let e = enemy;
+            if (!e.update()) {
+                Game.enemyList.removeChild(e);
+                Game.score += e.value;
             }
         }
-        for (let projectile of Game.projectileList) {
-            if (!projectile.update()) {
-                Game.graph.removeChild(projectile);
-                Game.projectileList.splice(Game.projectileList.indexOf(projectile), 1);
+        for (let projectile of Game.projectileList.getChildren()) {
+            let p = projectile;
+            if (!p.update()) {
+                Game.projectileList.removeChild(p);
             }
         }
         updateCamera();
@@ -119,7 +122,7 @@ var Game;
         map.addComponent(cmpMesh);
         cmpMesh.pivot.scale(ƒ.Vector3.ONE(Game.config.Map.size));
         cmpMesh.pivot.rotateX(-90);
-        Game.graph.addChild(map);
+        return map;
     }
     function createLights() {
         let cmpLightAmbient = new ƒ.ComponentLight(new ƒ.LightAmbient(new ƒ.Color(0.1, 0.1, 0.1)));

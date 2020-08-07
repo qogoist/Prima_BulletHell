@@ -16,9 +16,6 @@ namespace Game {
             let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);
             this.mtxLocal.scale(ƒ.Vector3.ONE(4));
-
-            graph.addChild(this);
-            enemyList.push(this);
         }
 
         public update(): boolean {

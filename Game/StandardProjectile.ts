@@ -21,9 +21,10 @@ namespace Game {
             let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
             this.mtxLocal.translate(distance);
 
-            for (let enemy of enemyList) {
-                if (this.collidesWith(enemy)) {
-                    enemy.reduceHP(this.damage);
+            for (let enemy of enemyList.getChildren()) {
+                let e: Enemy = <Enemy>enemy;
+                if (this.collidesWith(e)) {
+                    e.reduceHP(this.damage);
                     return false;
                 }
             }

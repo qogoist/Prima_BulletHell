@@ -22,8 +22,7 @@ namespace Game {
 
             enemy.mtxLocal.translation = _location;
 
-            graph.addChild(enemy);
-            enemyList.push(enemy);
+            enemyList.addChild(enemy);
         }
     }
 }

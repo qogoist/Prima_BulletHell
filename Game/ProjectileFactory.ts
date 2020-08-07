@@ -16,8 +16,7 @@ namespace Game {
                     break;
             }
 
-            graph.addChild(projectile);
-            projectileList.push(projectile);
+            projectileList.addChild(projectile);
         }
     }
 }

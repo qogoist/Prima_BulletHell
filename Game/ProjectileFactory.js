@@ -15,8 +15,7 @@ var Game;
                 default:
                     break;
             }
-            Game.graph.addChild(projectile);
-            Game.projectileList.push(projectile);
+            Game.projectileList.addChild(projectile);
         }
     }
     Game.ProjectileFactory = ProjectileFactory;

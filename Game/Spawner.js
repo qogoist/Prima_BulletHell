@@ -11,8 +11,6 @@ var Game;
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             this.addComponent(cmpTransform);
             this.mtxLocal.scale(ƒ.Vector3.ONE(4));
-            Game.graph.addChild(this);
-            Game.enemyList.push(this);
         }
         update() {
             let timeFrame = ƒ.Loop.timeFrameGame / 1000;

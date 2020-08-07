@@ -7,8 +7,8 @@ namespace Game {
     export let graph: ƒ.Node;
     export let player: Player;
     export let map: ƒ.Node;
-    export let projectileList: Projectile[] = [];
-    export let enemyList: Enemy[] = [];
+    export let projectileList: ƒ.Node;
+    export let enemyList: ƒ.Node;
     export let score: number;
     export let config: Config;
     export let color: number;
@@ -32,13 +32,18 @@ namespace Game {
         canvas.height = window.innerHeight;
 
         graph = new ƒ.Node("Graph");
+        map = generateMap();
         player = new Player();
+        projectileList = new ƒ.Node("ProjectileList");
+        enemyList = new ƒ.Node("EnemyList");
         score = 0;
 
-        generateMap();
         createLights();
 
-        graph.addChild(player);
+        graph.addChild(map);
+        graph.addChild(projectileList);
+        graph.addChild(enemyList);
+        map.addChild(player);
 
         cameraPos = new ƒ.Vector3(config.Map.camera[0], config.Map.camera[1], config.Map.camera[2]);
 
@@ -86,18 +91,18 @@ namespace Game {
         if (!player.update())
             gameOver();
 
-        for (let enemy of enemyList) {
-            if (!enemy.update()) {
-                graph.removeChild(enemy);
-                enemyList.splice(enemyList.indexOf(enemy), 1);
-                score += enemy.value;
+        for (let enemy of enemyList.getChildren()) {
+            let e: Enemy = <Enemy>enemy;
+            if (!e.update()) {
+                enemyList.removeChild(e);
+                score += e.value;
             }
         }
 
-        for (let projectile of projectileList) {
-            if (!projectile.update()) {
-                graph.removeChild(projectile);
-                projectileList.splice(projectileList.indexOf(projectile), 1);
+        for (let projectile of projectileList.getChildren()) {
+            let p: Projectile = <Projectile>projectile;
+            if (!p.update()) {
+                projectileList.removeChild(p);
             }
         }
 
@@ -152,7 +157,7 @@ namespace Game {
         player.setIsShooting(false);
     }
 
-    function generateMap(): void {
+    function generateMap(): ƒ.Node {
         let map: ƒ.Node = new ƒ.Node("Map");
 
         let material: ƒ.Material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Map.color)));
@@ -165,7 +170,7 @@ namespace Game {
         cmpMesh.pivot.scale(ƒ.Vector3.ONE(config.Map.size));
         cmpMesh.pivot.rotateX(-90);
 
-        graph.addChild(map);
+        return map;
     }
 
     function createLights(): void {

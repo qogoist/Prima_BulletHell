@@ -22,9 +22,10 @@ namespace Game {
             else {
                 this.setDirection(ƒ.Vector3.DIFFERENCE(player.mtxLocal.translation, this.mtxLocal.translation));
                 
-                for (let enemy of enemyList) {    
-                    if (this.collidesWith(enemy)) {
-                        this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, enemy.mtxLocal.translation));
+                for (let enemy of enemyList.getChildren()) {
+                    let e: Enemy = <Enemy>enemy;   
+                    if (this.collidesWith(e)) {
+                        this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, e.mtxLocal.translation));
                         this.move();
                     }
                 }

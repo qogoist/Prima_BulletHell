@@ -17,9 +17,10 @@ var Game;
             }
             else {
                 this.setDirection(ƒ.Vector3.DIFFERENCE(Game.player.mtxLocal.translation, this.mtxLocal.translation));
-                for (let enemy of Game.enemyList) {
-                    if (this.collidesWith(enemy)) {
-                        this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, enemy.mtxLocal.translation));
+                for (let enemy of Game.enemyList.getChildren()) {
+                    let e = enemy;
+                    if (this.collidesWith(e)) {
+                        this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, e.mtxLocal.translation));
                         this.move();
                     }
                 }

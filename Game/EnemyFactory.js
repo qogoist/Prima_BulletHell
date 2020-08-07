@@ -20,8 +20,7 @@ var Game;
                     break;
             }
             enemy.mtxLocal.translation = _location;
-            Game.graph.addChild(enemy);
-            Game.enemyList.push(enemy);
+            Game.enemyList.addChild(enemy);
         }
     }
     Game.EnemyFactory = EnemyFactory;
