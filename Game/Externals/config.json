@@ -1,11 +1,16 @@
 {
+    "Map": {
+        "size": 100,
+        "color": "lightgrey",
+        "camera": [10, 20, 10]
+    },
     "Colors": [
         "red",
         "blue",
         "green"
     ],
     "Player": {
-        "speed": 2,
+        "speed": 10,
         "health": 10,
         "projectile": "STANDARD",
         "firingRate": 5

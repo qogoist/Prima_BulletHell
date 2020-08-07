@@ -32,13 +32,21 @@ var Game;
         setDirection(_vec) {
             if (_vec.equals(ƒ.Vector3.ZERO()))
                 this.direction = _vec;
-            else
-                this.direction = ƒ.Vector3.NORMALIZATION(_vec, 1);
+            else {
+                let tempVec = ƒ.Vector3.NORMALIZATION(_vec, 1);
+                this.direction = new ƒ.Vector3(tempVec.x, 0, tempVec.z);
+            }
         }
         move() {
             let timeFrame = ƒ.Loop.timeFrameGame / 1000;
             let distance = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
-            this.mtxLocal.translate(distance);
+            let nextPos = ƒ.Vector3.SUM(this.mtxLocal.translation, distance);
+            let boundary = Game.config.Map.size / 2 - this.radius;
+            if (nextPos.x >= boundary || nextPos.x <= -boundary)
+                distance.x = 0;
+            if (nextPos.z >= boundary || nextPos.z <= -boundary)
+                distance.z = 0;
+            this.mtxLocal.translate(distance, false);
         }
     }
     Game.Actor = Actor;

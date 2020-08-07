@@ -6,27 +6,33 @@ var Game;
     window.addEventListener("resize", hndResize);
     Game.projectileList = [];
     Game.enemyList = [];
-    Game.globalVolume = 0.5;
+    let cameraPos;
+    let cmpAudioBackground;
+    Game.masterVolume = 0.5;
+    Game.sfxVolume = 0.5;
+    Game.musicVolume = 0.5;
     async function init() {
         const canvas = document.querySelector("canvas");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        Game.audioShot = await ƒ.Audio.load("Assets/shot.mp3");
         Game.graph = new ƒ.Node("Graph");
         Game.player = new Game.Player();
         Game.score = 0;
         generateMap();
         createLights();
         Game.graph.addChild(Game.player);
+        cameraPos = new ƒ.Vector3(Game.config.Map.camera[0], Game.config.Map.camera[1], Game.config.Map.camera[2]);
         let cmpCamera = new ƒ.ComponentCamera();
-        cmpCamera.pivot.translate(new ƒ.Vector3(10, 20, 10));
+        cmpCamera.pivot.translate(cameraPos);
         cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
         Game.viewport = new ƒ.Viewport();
         Game.viewport.initialize("Viewport", Game.graph, cmpCamera, canvas);
-        Game.player.addComponent(new ƒ.ComponentAudioListener());
+        cmpAudioBackground = new ƒ.ComponentAudio(Game.audioBackground, true, true);
+        Game.player.getChild(0).addComponent(new ƒ.ComponentAudioListener());
+        Game.player.getChild(0).addComponent(cmpAudioBackground);
         ƒ.AudioManager.default.listenTo(Game.graph);
-        ƒ.AudioManager.default.listen(Game.player.getComponent(ƒ.ComponentAudioListener));
-        ƒ.AudioManager.default.volume = Game.globalVolume;
+        ƒ.AudioManager.default.listen(Game.player.getChild(0).getComponent(ƒ.ComponentAudioListener));
+        ƒ.AudioManager.default.volume = Game.masterVolume;
         ƒ.Debug.log(ƒ.AudioManager.default);
         Game.viewport.draw();
         Game.viewport.activatePointerEvent("\u0192pointermove" /* MOVE */, true);
@@ -59,6 +65,7 @@ var Game;
                 Game.projectileList.splice(Game.projectileList.indexOf(projectile), 1);
             }
         }
+        updateCamera();
         updateScore();
         ƒ.AudioManager.default.update();
         Game.viewport.draw();
@@ -102,13 +109,13 @@ var Game;
     }
     function generateMap() {
         let map = new ƒ.Node("Map");
-        let material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("lightgreen")));
+        let material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Map.color)));
         let cmpMaterial = new ƒ.ComponentMaterial(material);
         map.addComponent(cmpMaterial);
         let mesh = new ƒ.MeshQuad();
         let cmpMesh = new ƒ.ComponentMesh(mesh);
         map.addComponent(cmpMesh);
-        cmpMesh.pivot.scale(ƒ.Vector3.ONE(10));
+        cmpMesh.pivot.scale(ƒ.Vector3.ONE(Game.config.Map.size));
         cmpMesh.pivot.rotateX(-90);
         Game.graph.addChild(map);
         let spawner = new Game.Spawner();
@@ -125,11 +132,22 @@ var Game;
         let elem = document.querySelector("h1#score");
         elem.innerHTML = "Score: " + Game.score;
     }
+    function updateCamera() {
+        let posCam = ƒ.Vector3.SUM(Game.player.mtxLocal.translation, cameraPos);
+        Game.viewport.camera.pivot.translation = posCam;
+        Game.viewport.camera.pivot.lookAt(Game.player.mtxLocal.translation);
+    }
     function getPauseMenu() {
         ƒ.Time.game.setScale(0);
-        let slider = document.getElementById("pVolume");
-        slider.value = (Game.globalVolume * 100).toString();
-        slider.addEventListener("input", changeVolume);
+        let masterSlider = document.getElementById("pMasterVolume");
+        masterSlider.value = (Game.masterVolume * 100).toString();
+        masterSlider.addEventListener("input", changeMasterVolume);
+        let musicSlider = document.getElementById("pMusicVolume");
+        musicSlider.value = (Game.musicVolume * 100).toString();
+        musicSlider.addEventListener("input", changeMusicVolume);
+        let sfxSlider = document.getElementById("pSFXVolume");
+        sfxSlider.value = (Game.sfxVolume * 100).toString();
+        sfxSlider.addEventListener("input", changeSFXVolume);
         document.getElementById("Pause").style.left = "50%";
         document.querySelector("#Resume").addEventListener("click", hidePauseMenu);
         document.querySelector("#Back").addEventListener("click", goToMainMenu);
@@ -156,17 +174,29 @@ var Game;
     async function hndLoad() {
         Game.config = await Game.loadJSON();
         Game.color = 0;
+        Game.audioShot = await ƒ.Audio.load("Assets/shot.mp3");
+        Game.audioBackground = await ƒ.Audio.load("Assets/background_music.mp3");
         document.querySelector("#Color").innerHTML = "COLOR: " + Game.config.Colors[Game.color].toUpperCase();
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);
-        document.querySelector("#Volume").addEventListener("input", changeVolume);
+        document.querySelector("#MasterVolume").addEventListener("input", changeMasterVolume);
+        document.querySelector("#MusicVolume").addEventListener("input", changeMusicVolume);
+        document.querySelector("#SFXVolume").addEventListener("input", changeSFXVolume);
     }
-    function changeVolume(_event) {
+    function changeMasterVolume(_event) {
         let slider = _event.target;
-        Game.globalVolume = parseInt(slider.value) / 100;
-        ƒ.AudioManager.default.volume = Game.globalVolume;
-        ƒ.AudioManager.default.gain.gain.value = Game.globalVolume;
-        console.log(Game.globalVolume);
+        Game.masterVolume = parseInt(slider.value) / 100;
+        ƒ.AudioManager.default.volume = Game.masterVolume;
+        ƒ.AudioManager.default.gain.gain.value = Game.masterVolume;
+    }
+    function changeMusicVolume(_event) {
+        let slider = _event.target;
+        Game.musicVolume = parseInt(slider.value) / 100;
+        cmpAudioBackground.volume = Game.musicVolume;
+    }
+    function changeSFXVolume(_event) {
+        let slider = _event.target;
+        Game.sfxVolume = parseInt(slider.value) / 100;
     }
     function gameOver() {
         Game.viewport.removeEventListener("\u0192keydown" /* DOWN */, hndKey);

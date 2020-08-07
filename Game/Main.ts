@@ -12,10 +12,16 @@ namespace Game {
     export let score: number;
     export let config: Config;
     export let color: number;
+    
+    let cameraPos: ƒ.Vector3;
 
     export let audioShot: ƒ.Audio;
+    export let audioBackground: ƒ.Audio;
+    let cmpAudioBackground: ƒ.ComponentAudio;
 
-    export let globalVolume: number = 0.5;
+    export let masterVolume: number = 0.5;
+    export let sfxVolume: number = 0.5;
+    export let musicVolume: number = 0.5;
 
     export let viewport: ƒ.Viewport;
 
@@ -23,8 +29,6 @@ namespace Game {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
-        audioShot = await ƒ.Audio.load("Assets/shot.mp3");
 
         graph = new ƒ.Node("Graph");
         player = new Player();
@@ -35,17 +39,22 @@ namespace Game {
 
         graph.addChild(player);
 
+        cameraPos = new ƒ.Vector3(config.Map.camera[0], config.Map.camera[1], config.Map.camera[2]);
+
         let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
-        cmpCamera.pivot.translate(new ƒ.Vector3(10, 20, 10));
+        cmpCamera.pivot.translate(cameraPos);
         cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
 
         viewport = new ƒ.Viewport();
         viewport.initialize("Viewport", graph, cmpCamera, canvas);
 
-        player.addComponent(new ƒ.ComponentAudioListener());
+        cmpAudioBackground = new ƒ.ComponentAudio(audioBackground, true, true);
+
+        player.getChild(0).addComponent(new ƒ.ComponentAudioListener());
+        player.getChild(0).addComponent(cmpAudioBackground);
         ƒ.AudioManager.default.listenTo(graph);
-        ƒ.AudioManager.default.listen(player.getComponent(ƒ.ComponentAudioListener));
-        ƒ.AudioManager.default.volume = globalVolume;
+        ƒ.AudioManager.default.listen(player.getChild(0).getComponent(ƒ.ComponentAudioListener));
+        ƒ.AudioManager.default.volume = masterVolume;
         ƒ.Debug.log(ƒ.AudioManager.default);
 
         viewport.draw();
@@ -70,6 +79,7 @@ namespace Game {
 
     function update(_event: ƒ.Eventƒ): void {
         processInput();
+
         if (!player.update())
             gameOver();
 
@@ -89,8 +99,8 @@ namespace Game {
             }
         }
 
+        updateCamera();
         updateScore();
-
         ƒ.AudioManager.default.update();
         viewport.draw();
     }
@@ -143,14 +153,14 @@ namespace Game {
     function generateMap(): void {
         let map: ƒ.Node = new ƒ.Node("Map");
 
-        let material: ƒ.Material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("lightgreen")));
+        let material: ƒ.Material = new ƒ.Material("Map", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Map.color)));
         let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
         map.addComponent(cmpMaterial);
 
         let mesh: ƒ.MeshQuad = new ƒ.MeshQuad();
         let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(mesh);
         map.addComponent(cmpMesh);
-        cmpMesh.pivot.scale(ƒ.Vector3.ONE(10));
+        cmpMesh.pivot.scale(ƒ.Vector3.ONE(config.Map.size));
         cmpMesh.pivot.rotateX(-90);
 
         graph.addChild(map);
@@ -158,6 +168,7 @@ namespace Game {
         let spawner: Spawner = new Spawner();
         spawner.mtxLocal.translate(new ƒ.Vector3(-5, 0, -5), false);
     }
+
     function createLights(): void {
         let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(new ƒ.Color(0.1, 0.1, 0.1)));
         let cmpLightDirection: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(new ƒ.Color(1, 1, 1)));
@@ -173,12 +184,26 @@ namespace Game {
         elem.innerHTML = "Score: " + score;
     }
 
+    function updateCamera(): void {
+        let posCam: ƒ.Vector3 = ƒ.Vector3.SUM(player.mtxLocal.translation, cameraPos);
+        viewport.camera.pivot.translation = posCam;
+        viewport.camera.pivot.lookAt(player.mtxLocal.translation);
+    }
+
     function getPauseMenu(): void {
         ƒ.Time.game.setScale(0);
 
-        let slider: HTMLInputElement = <HTMLInputElement>document.getElementById("pVolume");
-        slider.value = (globalVolume * 100).toString();
-        slider.addEventListener("input", changeVolume);
+        let masterSlider: HTMLInputElement = <HTMLInputElement>document.getElementById("pMasterVolume");
+        masterSlider.value = (masterVolume * 100).toString();
+        masterSlider.addEventListener("input", changeMasterVolume);
+
+        let musicSlider: HTMLInputElement = <HTMLInputElement>document.getElementById("pMusicVolume");
+        musicSlider.value = (musicVolume * 100).toString();
+        musicSlider.addEventListener("input", changeMusicVolume);
+
+        let sfxSlider: HTMLInputElement = <HTMLInputElement>document.getElementById("pSFXVolume");
+        sfxSlider.value = (sfxVolume * 100).toString();
+        sfxSlider.addEventListener("input", changeSFXVolume);
 
         document.getElementById("Pause").style.left = "50%";
         document.querySelector("#Resume").addEventListener("click", hidePauseMenu);
@@ -213,19 +238,36 @@ namespace Game {
     async function hndLoad(): Promise<void> {
         config = await loadJSON();
         color = 0;
-        document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
 
+        audioShot = await ƒ.Audio.load("Assets/shot.mp3");
+        audioBackground = await ƒ.Audio.load("Assets/background_music.mp3");
+        
+        document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
+        
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);
-        document.querySelector("#Volume").addEventListener("input", changeVolume);
+        document.querySelector("#MasterVolume").addEventListener("input", changeMasterVolume);
+        document.querySelector("#MusicVolume").addEventListener("input", changeMusicVolume);
+        document.querySelector("#SFXVolume").addEventListener("input", changeSFXVolume);
+
     }
 
-    function changeVolume(_event: Event): void {
+    function changeMasterVolume(_event: Event): void {
         let slider: HTMLInputElement = <HTMLInputElement>_event.target;
-        globalVolume = parseInt(slider.value) / 100;
-        ƒ.AudioManager.default.volume = globalVolume;
-        ƒ.AudioManager.default.gain.gain.value = globalVolume;
-        console.log(globalVolume);
+        masterVolume = parseInt(slider.value) / 100;
+        ƒ.AudioManager.default.volume = masterVolume;
+        ƒ.AudioManager.default.gain.gain.value = masterVolume;
+    }
+
+    function changeMusicVolume(_event: Event): void {
+        let slider: HTMLInputElement = <HTMLInputElement>_event.target;
+        musicVolume = parseInt(slider.value) / 100;
+        cmpAudioBackground.volume = musicVolume;
+    }
+
+    function changeSFXVolume(_event: Event): void {
+        let slider: HTMLInputElement = <HTMLInputElement>_event.target;
+        sfxVolume = parseInt(slider.value) / 100;
     }
 
     function gameOver(): void {

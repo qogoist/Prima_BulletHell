@@ -1,11 +1,18 @@
 namespace Game {
 
     export interface Config {
+        Map: Map;
         Colors: string[];
         Player: Player;
         StandardProjectile: StandardProjectile;
         Spawner: Spawner;
         SmallEnemy: SmallEnemy;
+    }
+
+    export interface Map {
+        size: number;
+        color: string;
+        camera: number[];
     }
 
     export async function loadJSON(): Promise<Config> {

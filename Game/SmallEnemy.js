@@ -15,8 +15,17 @@ var Game;
                 Game.player.reduceHP(this.damage);
                 return false;
             }
-            else
+            else {
                 this.setDirection(ƒ.Vector3.DIFFERENCE(Game.player.mtxLocal.translation, this.mtxLocal.translation));
+                for (let enemy of Game.enemyList) {
+                    if (this.collidesWith(enemy)) {
+                        this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, enemy.mtxLocal.translation));
+                        this.move();
+                    }
+                }
+                if (this.direction.equals(ƒ.Vector3.ZERO()))
+                    this.setDirection(ƒ.Vector3.DIFFERENCE(Game.player.mtxLocal.translation, this.mtxLocal.translation));
+            }
             this.move();
             return super.update();
         }

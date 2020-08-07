@@ -51,7 +51,8 @@ var Game;
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             model.addComponent(cmpTransform);
             model.mtxLocal.lookAt(this.direction);
-            let cmpAudio = new ƒ.ComponentAudio(Game.audioShot, false, true, ƒ.AudioManager.default);
+            let cmpAudio = new ƒ.ComponentAudio(Game.audioShot, false, true);
+            cmpAudio.volume = Game.sfxVolume;
             model.addComponent(cmpAudio);
             this.addChild(model);
         }

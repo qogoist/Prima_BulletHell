@@ -29,14 +29,20 @@ namespace Game {
         public update(): boolean {
             let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
             this.updateOrientation();
-            this.move();
-
+            
             if (this.isShooting && this.timeLastShot >= (1 / this.firingRate)) {
                 this.shoot();
                 this.timeLastShot = 0;
             }
-
+            
             this.timeLastShot += timeFrame;
+            
+            for (let enemy of enemyList) {
+                if (this.collidesWith(enemy))
+                    this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, enemy.mtxLocal.translation));
+            }
+            
+            this.move();
             return super.update();
         }
 

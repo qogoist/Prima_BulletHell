@@ -68,7 +68,10 @@ namespace Game {
             model.addComponent(cmpTransform);
             model.mtxLocal.lookAt(this.direction);
 
-            let cmpAudio: ƒ.ComponentAudio = new ƒ.ComponentAudio(audioShot, false, true, ƒ.AudioManager.default);
+            let cmpAudio: ƒ.ComponentAudio = new ƒ.ComponentAudio(audioShot, false, true);
+            cmpAudio.volume = sfxVolume;
+
+            
             model.addComponent(cmpAudio);
 
             this.addChild(model);

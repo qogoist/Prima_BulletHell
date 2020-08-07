@@ -2,7 +2,7 @@ namespace Game {
     import ƒ = FudgeCore;
 
     export abstract class Actor extends ƒ.Node implements CollisionSphere {
-        
+
         public radius: number;          //in m 
         public oColor: ƒ.Color;
 
@@ -50,8 +50,10 @@ namespace Game {
         public setDirection(_vec: ƒ.Vector3): void {
             if (_vec.equals(ƒ.Vector3.ZERO()))
                 this.direction = _vec;
-            else 
-                this.direction = ƒ.Vector3.NORMALIZATION(_vec, 1);
+            else {
+                let tempVec: ƒ.Vector3 = ƒ.Vector3.NORMALIZATION(_vec, 1);
+                this.direction = new ƒ.Vector3(tempVec.x, 0, tempVec.z);
+            }
         }
 
         protected abstract createModel(): void;
@@ -59,8 +61,16 @@ namespace Game {
         protected move(): void {
             let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
             let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
+            let nextPos: ƒ.Vector3 = ƒ.Vector3.SUM(this.mtxLocal.translation, distance);
 
-            this.mtxLocal.translate(distance);
+            let boundary: number = config.Map.size / 2 - this.radius;
+
+            if (nextPos.x >= boundary || nextPos.x <= -boundary)
+                distance.x = 0;
+            if (nextPos.z >= boundary || nextPos.z <= -boundary)
+                distance.z = 0;
+
+            this.mtxLocal.translate(distance, false);
         }
     }
 }
