@@ -1,10 +1,10 @@
 {
     "map": {
-        "size": 50,
+        "size": 25,
         "color": "lightgrey",
         "camera": [10, 20, 10],
         "spawnRate": 50,
-        "spawnRateReduction": 10
+        "spawnRateReduction": 5
     },
     "colors": [
         "red",
@@ -12,13 +12,13 @@
         "green"
     ],
     "player": {
-        "speed": 3,
+        "speed": 5,
         "health": 10,
         "projectile": "STANDARD",
-        "firingRate": 5
+        "firingRate": 6
     },
     "standardProjectile": {
-        "speed": 10,
+        "speed": 12,
         "damage": 1,
         "lifespan": 5
     },
