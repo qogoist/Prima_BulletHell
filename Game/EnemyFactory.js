@@ -15,6 +15,15 @@ var Game;
                     break;
                 case ENEMIES.SPAWNER:
                     enemy = new Game.Spawner("Spawner");
+                    let bounds = Game.config.map.size / 2 - enemy.radius;
+                    if (_location.x >= bounds)
+                        _location.x = bounds;
+                    if (_location.x <= -bounds)
+                        _location.x = -bounds;
+                    if (_location.z >= bounds)
+                        _location.z = bounds;
+                    if (_location.z <= -bounds)
+                        _location.z = -bounds;
                     break;
                 default:
                     break;

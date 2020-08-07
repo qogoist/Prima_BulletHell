@@ -294,7 +294,9 @@ namespace Game {
     function changeMusicVolume(_event: Event): void {
         let slider: HTMLInputElement = <HTMLInputElement>_event.target;
         musicVolume = parseInt(slider.value) / 100;
-        cmpAudioBackground.volume = musicVolume;
+
+        if (cmpAudioBackground != null)
+            cmpAudioBackground.volume = musicVolume;
     }
 
     function changeSFXVolume(_event: Event): void {

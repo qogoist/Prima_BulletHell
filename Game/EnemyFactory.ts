@@ -15,6 +15,17 @@ namespace Game {
                     break;
                 case ENEMIES.SPAWNER:
                     enemy = new Spawner("Spawner");
+                    let bounds: number = config.map.size / 2 - enemy.radius;
+
+                    if (_location.x >= bounds)
+                        _location.x = bounds;
+                    if (_location.x <= -bounds)
+                        _location.x = -bounds;
+                    if (_location.z >= bounds)
+                        _location.z = bounds;
+                    if (_location.z <= -bounds)
+                        _location.z = -bounds;
+
                     break;
                 default:
                     break;

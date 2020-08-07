@@ -214,7 +214,8 @@ var Game;
     function changeMusicVolume(_event) {
         let slider = _event.target;
         Game.musicVolume = parseInt(slider.value) / 100;
-        cmpAudioBackground.volume = Game.musicVolume;
+        if (cmpAudioBackground != null)
+            cmpAudioBackground.volume = Game.musicVolume;
     }
     function changeSFXVolume(_event) {
         let slider = _event.target;
