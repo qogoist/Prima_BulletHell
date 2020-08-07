@@ -17,6 +17,7 @@ namespace Game {
         public update(): boolean {
             if (this.collidesWith(player)) {
                 player.reduceHP(this.damage);
+                cmpAudioImpact.play(true);
                 return false;
             }
             else {

@@ -17,8 +17,10 @@ namespace Game {
     let spawnTimer: ƒ.Timer;
 
     export let audioShot: ƒ.Audio;
+    export let audioImpact: ƒ.Audio;
     export let audioBackground: ƒ.Audio;
     let cmpAudioBackground: ƒ.ComponentAudio;
+    export let cmpAudioImpact: ƒ.ComponentAudio;
 
     export let masterVolume: number = 0.5;
     export let sfxVolume: number = 0.5;
@@ -42,7 +44,7 @@ namespace Game {
 
         graph.addChild(map);
         graph.addChild(projectileList);
-        graph.addChild(enemyList);
+        map.addChild(enemyList);
         map.addChild(player);
 
         cameraPos = new ƒ.Vector3(config.Map.camera[0], config.Map.camera[1], config.Map.camera[2]);
@@ -55,9 +57,13 @@ namespace Game {
         viewport.initialize("Viewport", graph, cmpCamera, canvas);
 
         cmpAudioBackground = new ƒ.ComponentAudio(audioBackground, true, true);
+        cmpAudioBackground.volume = musicVolume;
+        cmpAudioImpact = new ƒ.ComponentAudio(audioImpact, false, false);
+        cmpAudioImpact.volume = sfxVolume;
 
         player.getChild(0).addComponent(new ƒ.ComponentAudioListener());
         player.getChild(0).addComponent(cmpAudioBackground);
+        player.getChild(0).addComponent(cmpAudioImpact);
         ƒ.AudioManager.default.listenTo(graph);
         ƒ.AudioManager.default.listen(player.getChild(0).getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.volume = masterVolume;
@@ -265,6 +271,7 @@ namespace Game {
         color = 0;
 
         audioShot = await ƒ.Audio.load("Assets/shot.mp3");
+        audioImpact = await ƒ.Audio.load("Assets/impact.mp3");
         audioBackground = await ƒ.Audio.load("Assets/background_music.mp3");
 
         document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();

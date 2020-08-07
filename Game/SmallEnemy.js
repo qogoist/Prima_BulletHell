@@ -13,6 +13,7 @@ var Game;
         update() {
             if (this.collidesWith(Game.player)) {
                 Game.player.reduceHP(this.damage);
+                Game.cmpAudioImpact.play(true);
                 return false;
             }
             else {

@@ -21,6 +21,8 @@ namespace Game {
             let distance: ƒ.Vector3 = ƒ.Vector3.SCALE(this.direction, timeFrame * this.speed);
             this.mtxLocal.translate(distance);
 
+
+
             for (let enemy of enemyList.getChildren()) {
                 let e: Enemy = <Enemy>enemy;
                 if (this.collidesWith(e)) {
@@ -28,6 +30,8 @@ namespace Game {
                     return false;
                 }
             }
+
+
 
             if (this.lifespan <= 0) {
                 return false;
@@ -61,7 +65,7 @@ namespace Game {
                 material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color])));
             else
                 material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color + 1])));
-                
+
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
 
@@ -72,7 +76,6 @@ namespace Game {
             let cmpAudio: ƒ.ComponentAudio = new ƒ.ComponentAudio(audioShot, false, true);
             cmpAudio.volume = sfxVolume;
 
-            
             model.addComponent(cmpAudio);
 
             this.addChild(model);
