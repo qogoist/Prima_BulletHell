@@ -11,7 +11,7 @@ namespace Game {
         constructor(_name: string = "Player") {
             ƒ.Debug.log("Creating new Player...");
 
-            super(_name, config.Player.speed, config.Player.health, 0.5);
+            super(_name, config.Player.speed, config.Player.health, 0.5, ƒ.Color.CSS(config.Colors[color]));
             this.projectile = config.Player.projectile;
             this.isShooting = false;
             this.firingRate = config.Player.firingRate;
@@ -44,13 +44,19 @@ namespace Game {
             this.isShooting = _state;
         }
 
+        public reduceHP(_x: number): void {
+            super.reduceHP(_x);
+
+            ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(config.Colors[color + 1]));
+        }
+
         protected createModel(): void {
             let sphere: ƒ.Node = new ƒ.Node("PlayerModel");
             let meshSphere: ƒ.MeshSphere = new ƒ.MeshSphere(10, 10);
             let cmpMeshSphere: ƒ.ComponentMesh = new ƒ.ComponentMesh(meshSphere);
             sphere.addComponent(cmpMeshSphere);
 
-            let material: ƒ.Material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color])));
+            let material: ƒ.Material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored(this.oColor));
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             sphere.addComponent(cmpMaterial);
 

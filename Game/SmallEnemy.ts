@@ -17,7 +17,7 @@ namespace Game {
         public update(): boolean {
             if (this.collidesWith(player)) {
                 player.reduceHP(this.damage);
-                this.setDirection(ƒ.Vector3.SCALE(this.direction, -1));
+                return false;
             }
             else
                 this.setDirection(ƒ.Vector3.DIFFERENCE(player.mtxLocal.translation, this.mtxLocal.translation));
@@ -33,7 +33,7 @@ namespace Game {
             let cmpMeshSphere: ƒ.ComponentMesh = new ƒ.ComponentMesh(meshSphere);
             sphere.addComponent(cmpMeshSphere);
 
-            let material: ƒ.Material = new ƒ.Material("SmallEnemy", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material: ƒ.Material = new ƒ.Material("SmallEnemy", ƒ.ShaderFlat, new ƒ.CoatColored(this.oColor));
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             sphere.addComponent(cmpMaterial);
 

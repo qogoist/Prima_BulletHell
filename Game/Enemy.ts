@@ -6,14 +6,14 @@ namespace Game {
         public value: number;
 
         constructor(_name: string, _speed: number, _health: number, _radius: number, _value: number) {
-            super(_name, _speed, _health, _radius);
+            super(_name, _speed, _health, _radius, ƒ.Color.CSS(config.Colors[color + 1]));
             this.value = _value;
         }
 
         public reduceHP(_x: number): void {
             super.reduceHP(_x);
 
-            ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth));
+            ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(config.Colors[color]));
         }
 
     }

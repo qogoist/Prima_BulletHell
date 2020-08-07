@@ -29,7 +29,7 @@ var Game;
             let meshSphere = new ƒ.MeshPyramid();
             let cmpMeshSphere = new ƒ.ComponentMesh(meshSphere);
             model.addComponent(cmpMeshSphere);
-            let material = new ƒ.Material("Spawner", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material = new ƒ.Material("Spawner", ƒ.ShaderFlat, new ƒ.CoatColored(this.oColor));
             let cmpMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());

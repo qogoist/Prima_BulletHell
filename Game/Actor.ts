@@ -4,6 +4,7 @@ namespace Game {
     export abstract class Actor extends ƒ.Node implements CollisionSphere {
         
         public radius: number;          //in m 
+        public oColor: ƒ.Color;
 
         protected facing: ƒ.Vector3;
         protected direction: ƒ.Vector3;
@@ -11,7 +12,7 @@ namespace Game {
         protected health: number;
         protected maxHealth: number;
 
-        constructor(_name: string, _speed: number, _health: number, _radius: number) {
+        constructor(_name: string, _speed: number, _health: number, _radius: number, _color: ƒ.Color) {
             super(_name);
             this.facing = ƒ.Vector3.X();
             this.direction = ƒ.Vector3.ZERO();
@@ -19,6 +20,8 @@ namespace Game {
             this.health = _health;
             this.maxHealth = _health;
             this.radius = _radius;
+            this.oColor = _color;
+
 
             this.createModel();
         }

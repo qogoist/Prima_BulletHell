@@ -41,7 +41,7 @@ namespace Game {
             let cmpMeshSphere: ƒ.ComponentMesh = new ƒ.ComponentMesh(meshSphere);
             model.addComponent(cmpMeshSphere);
 
-            let material: ƒ.Material = new ƒ.Material("Spawner", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material: ƒ.Material = new ƒ.Material("Spawner", ƒ.ShaderFlat, new ƒ.CoatColored(this.oColor));
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
 

@@ -5,7 +5,7 @@ var Game;
     class Player extends Game.Actor {
         constructor(_name = "Player") {
             ƒ.Debug.log("Creating new Player...");
-            super(_name, Game.config.Player.speed, Game.config.Player.health, 0.5);
+            super(_name, Game.config.Player.speed, Game.config.Player.health, 0.5, ƒ.Color.CSS(Game.config.Colors[Game.color]));
             this.projectile = Game.config.Player.projectile;
             this.isShooting = false;
             this.firingRate = Game.config.Player.firingRate;
@@ -31,12 +31,16 @@ var Game;
         setIsShooting(_state) {
             this.isShooting = _state;
         }
+        reduceHP(_x) {
+            super.reduceHP(_x);
+            Game.ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(Game.config.Colors[Game.color + 1]));
+        }
         createModel() {
             let sphere = new ƒ.Node("PlayerModel");
             let meshSphere = new ƒ.MeshSphere(10, 10);
             let cmpMeshSphere = new ƒ.ComponentMesh(meshSphere);
             sphere.addComponent(cmpMeshSphere);
-            let material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(Game.config.Colors[Game.color])));
+            let material = new ƒ.Material("Player", ƒ.ShaderFlat, new ƒ.CoatColored(this.oColor));
             let cmpMaterial = new ƒ.ComponentMaterial(material);
             sphere.addComponent(cmpMaterial);
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());

@@ -3,7 +3,7 @@ var Game;
 (function (Game) {
     var ƒ = FudgeCore;
     class Actor extends ƒ.Node {
-        constructor(_name, _speed, _health, _radius) {
+        constructor(_name, _speed, _health, _radius, _color) {
             super(_name);
             this.facing = ƒ.Vector3.X();
             this.direction = ƒ.Vector3.ZERO();
@@ -11,6 +11,7 @@ var Game;
             this.health = _health;
             this.maxHealth = _health;
             this.radius = _radius;
+            this.oColor = _color;
             this.createModel();
         }
         update() {

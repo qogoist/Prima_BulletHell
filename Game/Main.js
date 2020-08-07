@@ -6,10 +6,12 @@ var Game;
     window.addEventListener("resize", hndResize);
     Game.projectileList = [];
     Game.enemyList = [];
-    function init() {
+    Game.globalVolume = 0.5;
+    async function init() {
         const canvas = document.querySelector("canvas");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        Game.audioShot = await ƒ.Audio.load("Assets/shot.mp3");
         Game.graph = new ƒ.Node("Graph");
         Game.player = new Game.Player();
         Game.score = 0;
@@ -21,7 +23,11 @@ var Game;
         cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
         Game.viewport = new ƒ.Viewport();
         Game.viewport.initialize("Viewport", Game.graph, cmpCamera, canvas);
-        ƒ.Debug.log(Game.viewport);
+        Game.player.addComponent(new ƒ.ComponentAudioListener());
+        ƒ.AudioManager.default.listenTo(Game.graph);
+        ƒ.AudioManager.default.listen(Game.player.getComponent(ƒ.ComponentAudioListener));
+        ƒ.AudioManager.default.volume = Game.globalVolume;
+        ƒ.Debug.log(ƒ.AudioManager.default);
         Game.viewport.draw();
         Game.viewport.activatePointerEvent("\u0192pointermove" /* MOVE */, true);
         Game.viewport.addEventListener("\u0192pointermove" /* MOVE */, hndMouseMove);
@@ -54,6 +60,7 @@ var Game;
             }
         }
         updateScore();
+        ƒ.AudioManager.default.update();
         Game.viewport.draw();
     }
     function hndKey(_event) {
@@ -120,6 +127,9 @@ var Game;
     }
     function getPauseMenu() {
         ƒ.Time.game.setScale(0);
+        let slider = document.getElementById("pVolume");
+        slider.value = (Game.globalVolume * 100).toString();
+        slider.addEventListener("input", changeVolume);
         document.getElementById("Pause").style.left = "50%";
         document.querySelector("#Resume").addEventListener("click", hidePauseMenu);
         document.querySelector("#Back").addEventListener("click", goToMainMenu);
@@ -149,6 +159,14 @@ var Game;
         document.querySelector("#Color").innerHTML = "COLOR: " + Game.config.Colors[Game.color].toUpperCase();
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);
+        document.querySelector("#Volume").addEventListener("input", changeVolume);
+    }
+    function changeVolume(_event) {
+        let slider = _event.target;
+        Game.globalVolume = parseInt(slider.value) / 100;
+        ƒ.AudioManager.default.volume = Game.globalVolume;
+        ƒ.AudioManager.default.gain.gain.value = Game.globalVolume;
+        console.log(Game.globalVolume);
     }
     function gameOver() {
         Game.viewport.removeEventListener("\u0192keydown" /* DOWN */, hndKey);

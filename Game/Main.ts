@@ -13,12 +13,18 @@ namespace Game {
     export let config: Config;
     export let color: number;
 
+    export let audioShot: ƒ.Audio;
+
+    export let globalVolume: number = 0.5;
+
     export let viewport: ƒ.Viewport;
 
-    function init(): void {
+    async function init(): Promise<void> {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+        audioShot = await ƒ.Audio.load("Assets/shot.mp3");
 
         graph = new ƒ.Node("Graph");
         player = new Player();
@@ -35,7 +41,12 @@ namespace Game {
 
         viewport = new ƒ.Viewport();
         viewport.initialize("Viewport", graph, cmpCamera, canvas);
-        ƒ.Debug.log(viewport);
+
+        player.addComponent(new ƒ.ComponentAudioListener());
+        ƒ.AudioManager.default.listenTo(graph);
+        ƒ.AudioManager.default.listen(player.getComponent(ƒ.ComponentAudioListener));
+        ƒ.AudioManager.default.volume = globalVolume;
+        ƒ.Debug.log(ƒ.AudioManager.default);
 
         viewport.draw();
 
@@ -79,6 +90,8 @@ namespace Game {
         }
 
         updateScore();
+
+        ƒ.AudioManager.default.update();
         viewport.draw();
     }
 
@@ -163,6 +176,10 @@ namespace Game {
     function getPauseMenu(): void {
         ƒ.Time.game.setScale(0);
 
+        let slider: HTMLInputElement = <HTMLInputElement>document.getElementById("pVolume");
+        slider.value = (globalVolume * 100).toString();
+        slider.addEventListener("input", changeVolume);
+
         document.getElementById("Pause").style.left = "50%";
         document.querySelector("#Resume").addEventListener("click", hidePauseMenu);
         document.querySelector("#Back").addEventListener("click", goToMainMenu);
@@ -200,6 +217,15 @@ namespace Game {
 
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);
+        document.querySelector("#Volume").addEventListener("input", changeVolume);
+    }
+
+    function changeVolume(_event: Event): void {
+        let slider: HTMLInputElement = <HTMLInputElement>_event.target;
+        globalVolume = parseInt(slider.value) / 100;
+        ƒ.AudioManager.default.volume = globalVolume;
+        ƒ.AudioManager.default.gain.gain.value = globalVolume;
+        console.log(globalVolume);
     }
 
     function gameOver(): void {

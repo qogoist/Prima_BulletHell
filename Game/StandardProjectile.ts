@@ -59,7 +59,7 @@ namespace Game {
             if (_playerOwned)
                 material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color])));
             else
-                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored());
+                material = new ƒ.Material("StandardProjectile", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS(config.Colors[color + 1])));
                 
             let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(material);
             model.addComponent(cmpMaterial);
@@ -67,6 +67,9 @@ namespace Game {
             let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
             model.addComponent(cmpTransform);
             model.mtxLocal.lookAt(this.direction);
+
+            let cmpAudio: ƒ.ComponentAudio = new ƒ.ComponentAudio(audioShot, false, true, ƒ.AudioManager.default);
+            model.addComponent(cmpAudio);
 
             this.addChild(model);
         }

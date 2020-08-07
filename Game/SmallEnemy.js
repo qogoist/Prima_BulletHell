@@ -13,7 +13,7 @@ var Game;
         update() {
             if (this.collidesWith(Game.player)) {
                 Game.player.reduceHP(this.damage);
-                this.setDirection(ƒ.Vector3.SCALE(this.direction, -1));
+                return false;
             }
             else
                 this.setDirection(ƒ.Vector3.DIFFERENCE(Game.player.mtxLocal.translation, this.mtxLocal.translation));
@@ -25,7 +25,7 @@ var Game;
             let meshSphere = new ƒ.MeshSphere(5, 5);
             let cmpMeshSphere = new ƒ.ComponentMesh(meshSphere);
             sphere.addComponent(cmpMeshSphere);
-            let material = new ƒ.Material("SmallEnemy", ƒ.ShaderFlat, new ƒ.CoatColored());
+            let material = new ƒ.Material("SmallEnemy", ƒ.ShaderFlat, new ƒ.CoatColored(this.oColor));
             let cmpMaterial = new ƒ.ComponentMaterial(material);
             sphere.addComponent(cmpMaterial);
             let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY());
