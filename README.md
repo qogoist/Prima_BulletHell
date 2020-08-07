@@ -5,6 +5,7 @@ Ein Bullet-Hell-artiges spiel in FUDGE - Abgabe von Jonas Haller im Kurs "Protot
 * [Quellcode](https://github.com/qogoist/Prima_BulletHell/tree/master/Game)
 * [Designdokument](designdokument.pdf)
 * [Gepacktes Archiv](archive.zip)
+* [Anleitung](Anleitung.md)
 
 
 ## Checkliste für Leistungsnachweis
@@ -26,10 +27,3 @@ Ein Bullet-Hell-artiges spiel in FUDGE - Abgabe von Jonas Haller im Kurs "Protot
 |  9 | Subklassen            | Alle gegnerKlassen sind Subklassen der abstrakten Klasse "Enemy", welche zusammen mit der Klasse "Player" eine Subklasse der abstrakten Klasse "Actor" ist. Dies wurde gewählt weil sich alle Gegner und die Spielfigure gewisse Eigenschaften, wie z.B. Lebenspunkte und Geschwindigkeit, sowie de Fähigkeit sich zu bewegen und auf Kollisionen zu Prüfen teilen. Die Projektile haben ihre eigene Superklasse "Projectile" die von allen Projektilen erweitert wird, da sie sich in ihren Eigenschaften doch von den Aktoren underscheiden. So haben Projektile z.B. keine Lebenspunkte und keine dedizierte Bewegungsfunktion. |
 | 10 | Maße & Positionen     | Größen sind durchweg in Meter, Geschwindigkeiten in Meter/Sekunde angegeben. Richtungsvektoren werden möglichst normiert angegeben. So ist die Spielfigure z.B. 1 Meter Groß und bewegt sich standardmäßig mit einer Geschwindigkeit von 3m/s. Im Vergleich dazu bewegen sich die Projektile mit 10m/s sehr langsam. Es wurde hier bewusst auf eine realistische Abbildung verzichtet um eine angenehmeres Spielgefühl zu erzeugen. Dennoch richten sich die Werte prinzipiell nach dem metrischen System um eine grundlegende Vergleichbarkeit zu schaffen. |
 | 11 | Event-System          | Die Nutzereingaben im Spiel, sowie in den Menüs werden mittels des Eventsystems entgegen genommen und an die entsprechenden Funktionen weitergegeben. |
-
-## Abgabeformat
-* Stelle zudem auf diese Art dort auch ein gepacktes Archiv zur Verfügung, welches folgende Daten enthält
-  * Das Designdokument 
-  * Die Projektordner inklusive aller erforderlichen Dateien, also auch Bild- und Audiodaten
-  * Eine kurze Anleitung zur Installation der Anwendung unter Berücksichtigung erforderlicher Dienste (z.B. Heroku, MongoDB etc.) 
-  * Eine kurze Anleitung zur Interaktion mit der Anwendung
