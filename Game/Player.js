@@ -38,6 +38,8 @@ var Game;
         reduceHP(_x) {
             super.reduceHP(_x);
             Game.ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(Game.config.Colors[Game.color + 1]));
+            let elem = document.querySelector("h1#health");
+            elem.innerHTML = "HP: " + this.health + "/" + this.maxHealth;
         }
         createModel() {
             let sphere = new ƒ.Node("PlayerModel");

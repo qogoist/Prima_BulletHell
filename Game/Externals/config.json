@@ -1,8 +1,10 @@
 {
     "Map": {
-        "size": 100,
+        "size": 50,
         "color": "lightgrey",
-        "camera": [10, 20, 10]
+        "camera": [10, 20, 10],
+        "spawnRate": 60,
+        "spawnRateReduction": 15
     },
     "Colors": [
         "red",
@@ -10,7 +12,7 @@
         "green"
     ],
     "Player": {
-        "speed": 10,
+        "speed": 3,
         "health": 10,
         "projectile": "STANDARD",
         "firingRate": 5
@@ -30,7 +32,7 @@
         "speed": 0.5,
         "health": 100,
         "spawnType": "SMALL",
-        "spawnRate": 1,
+        "spawnRate": 2,
         "value": 20
     }
 }

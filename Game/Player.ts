@@ -29,19 +29,19 @@ namespace Game {
         public update(): boolean {
             let timeFrame: number = ƒ.Loop.timeFrameGame / 1000;
             this.updateOrientation();
-            
+
             if (this.isShooting && this.timeLastShot >= (1 / this.firingRate)) {
                 this.shoot();
                 this.timeLastShot = 0;
             }
-            
+
             this.timeLastShot += timeFrame;
-            
+
             for (let enemy of enemyList) {
                 if (this.collidesWith(enemy))
                     this.setDirection(ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, enemy.mtxLocal.translation));
             }
-            
+
             this.move();
             return super.update();
         }
@@ -54,6 +54,9 @@ namespace Game {
             super.reduceHP(_x);
 
             ColorUtil.changeColor(this, 1 - (this.health / this.maxHealth), this.oColor, ƒ.Color.CSS(config.Colors[color + 1]));
+            
+            let elem: HTMLElement = document.querySelector("h1#health");
+            elem.innerHTML = "HP: " + this.health + "/" + this.maxHealth;
         }
 
         protected createModel(): void {

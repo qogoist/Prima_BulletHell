@@ -13,6 +13,8 @@ namespace Game {
         size: number;
         color: string;
         camera: number[];
+        spawnRate: number;
+        spawnRateReduction: number;
     }
 
     export async function loadJSON(): Promise<Config> {

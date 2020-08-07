@@ -12,8 +12,9 @@ namespace Game {
     export let score: number;
     export let config: Config;
     export let color: number;
-    
+
     let cameraPos: ƒ.Vector3;
+    let spawnTimer: ƒ.Timer;
 
     export let audioShot: ƒ.Audio;
     export let audioBackground: ƒ.Audio;
@@ -57,6 +58,8 @@ namespace Game {
         ƒ.AudioManager.default.volume = masterVolume;
         ƒ.Debug.log(ƒ.AudioManager.default);
 
+        spawnTimer = new ƒ.Timer(ƒ.Time.game, 0, 1, hndSpawnerSpawn);
+
         viewport.draw();
 
         viewport.activatePointerEvent(ƒ.EVENT_POINTER.MOVE, true);
@@ -87,7 +90,6 @@ namespace Game {
             if (!enemy.update()) {
                 graph.removeChild(enemy);
                 enemyList.splice(enemyList.indexOf(enemy), 1);
-
                 score += enemy.value;
             }
         }
@@ -164,9 +166,6 @@ namespace Game {
         cmpMesh.pivot.rotateX(-90);
 
         graph.addChild(map);
-
-        let spawner: Spawner = new Spawner();
-        spawner.mtxLocal.translate(new ƒ.Vector3(-5, 0, -5), false);
     }
 
     function createLights(): void {
@@ -177,6 +176,27 @@ namespace Game {
 
         graph.addComponent(cmpLightAmbient);
         graph.addComponent(cmpLightDirection);
+    }
+
+    function hndSpawnerSpawn(): void {
+        console.log(spawnTimer.lapse);
+        let rnd: ƒ.Random = new ƒ.Random();
+        let bound: number = config.Map.size / 2;
+
+        let x: number = rnd.getRangeFloored(-bound, bound);
+        let z: number = rnd.getRangeFloored(-bound, bound);
+
+        let pos: ƒ.Vector3 = new ƒ.Vector3(x, 0, z);
+
+        EnemyFactory.createEnemy(ENEMIES.SPAWNER, pos);
+
+        let nextTime: number = (spawnTimer.lapse / 1000) - config.Map.spawnRateReduction;
+
+        if (nextTime <= 0)
+            nextTime = config.Map.spawnRate;
+
+        spawnTimer.clear();
+        spawnTimer = new ƒ.Timer(ƒ.Time.game, nextTime * 1000, 0, hndSpawnerSpawn);
     }
 
     function updateScore(): void {
@@ -241,9 +261,9 @@ namespace Game {
 
         audioShot = await ƒ.Audio.load("Assets/shot.mp3");
         audioBackground = await ƒ.Audio.load("Assets/background_music.mp3");
-        
+
         document.querySelector("#Color").innerHTML = "COLOR: " + config.Colors[color].toUpperCase();
-        
+
         document.querySelector("#Start").addEventListener("click", startGame);
         document.querySelector("#Color").addEventListener("click", changeColor);
         document.querySelector("#MasterVolume").addEventListener("input", changeMasterVolume);

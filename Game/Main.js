@@ -7,6 +7,7 @@ var Game;
     Game.projectileList = [];
     Game.enemyList = [];
     let cameraPos;
+    let spawnTimer;
     let cmpAudioBackground;
     Game.masterVolume = 0.5;
     Game.sfxVolume = 0.5;
@@ -34,6 +35,7 @@ var Game;
         ƒ.AudioManager.default.listen(Game.player.getChild(0).getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.volume = Game.masterVolume;
         ƒ.Debug.log(ƒ.AudioManager.default);
+        spawnTimer = new ƒ.Timer(ƒ.Time.game, 0, 1, hndSpawnerSpawn);
         Game.viewport.draw();
         Game.viewport.activatePointerEvent("\u0192pointermove" /* MOVE */, true);
         Game.viewport.addEventListener("\u0192pointermove" /* MOVE */, hndMouseMove);
@@ -118,8 +120,6 @@ var Game;
         cmpMesh.pivot.scale(ƒ.Vector3.ONE(Game.config.Map.size));
         cmpMesh.pivot.rotateX(-90);
         Game.graph.addChild(map);
-        let spawner = new Game.Spawner();
-        spawner.mtxLocal.translate(new ƒ.Vector3(-5, 0, -5), false);
     }
     function createLights() {
         let cmpLightAmbient = new ƒ.ComponentLight(new ƒ.LightAmbient(new ƒ.Color(0.1, 0.1, 0.1)));
@@ -127,6 +127,20 @@ var Game;
         cmpLightDirection.pivot.lookAt(new ƒ.Vector3(0, -10, -10));
         Game.graph.addComponent(cmpLightAmbient);
         Game.graph.addComponent(cmpLightDirection);
+    }
+    function hndSpawnerSpawn() {
+        console.log(spawnTimer.lapse);
+        let rnd = new ƒ.Random();
+        let bound = Game.config.Map.size / 2;
+        let x = rnd.getRangeFloored(-bound, bound);
+        let z = rnd.getRangeFloored(-bound, bound);
+        let pos = new ƒ.Vector3(x, 0, z);
+        Game.EnemyFactory.createEnemy(Game.ENEMIES.SPAWNER, pos);
+        let nextTime = (spawnTimer.lapse / 1000) - Game.config.Map.spawnRateReduction;
+        if (nextTime <= 0)
+            nextTime = Game.config.Map.spawnRate;
+        spawnTimer.clear();
+        spawnTimer = new ƒ.Timer(ƒ.Time.game, nextTime * 1000, 0, hndSpawnerSpawn);
     }
     function updateScore() {
         let elem = document.querySelector("h1#score");

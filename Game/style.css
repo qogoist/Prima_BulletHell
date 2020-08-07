@@ -17,6 +17,14 @@ body {
     margin: 0;
 }
 
+#health {
+    position: absolute;
+    color: white;
+    left: 20px;
+    top: 15px;
+    margin: 0;
+}
+
 #Main {
     position: absolute;
     left: 0%;
